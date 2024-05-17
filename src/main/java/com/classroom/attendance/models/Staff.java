@@ -1,4 +1,4 @@
-package com.classroom.attendance.model;
+package com.classroom.attendance.models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Student {
+public class Staff {
   @Id
-  @Schema(description = "Student Id")
-  @Column(name = "student_id")
-  private String studentId;
+  @Schema(description = "Staff Id")
+  @Column(name = "staff_id")
+  private String staffId;
 
   @Column(name = "given_name")
   private String givenName;

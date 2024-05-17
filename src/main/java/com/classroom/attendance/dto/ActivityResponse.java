@@ -1,5 +1,8 @@
 package com.classroom.attendance.dto;
 
+import lombok.Data;
+
+@Data
 public class ActivityResponse {
 
   private String activityCode;

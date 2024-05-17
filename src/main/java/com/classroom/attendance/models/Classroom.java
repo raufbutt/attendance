@@ -1,4 +1,4 @@
-package com.classroom.attendance.model;
+package com.classroom.attendance.models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
@@ -27,6 +27,6 @@ public class Classroom {
   private String location;
 
   @Schema(description = "List of activities")
-  @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "activityCode", cascade = CascadeType.ALL, orphanRemoval = true)
   List<Activity> activities;
 }

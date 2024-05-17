@@ -1,4 +1,4 @@
-package com.classroom.attendance.model;
+package com.classroom.attendance.models;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -6,7 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.sql.Time;
+import java.sql.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,20 +15,23 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Timeslot {
-
+public class Checkin {
   @Id
-  @Schema(description = "Timeslot Id")
+  @Schema(description = "Checkin Id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Long id;
 
-  @Column(name = "from")
-  private Time from;
+  @Schema(description = "Classroom reference")
+  @Column(name = "cr_reference")
+  private String reference;
 
-  @Column(name = "to")
-  private Time to;
+  @Column(name = "activity_code")
+  private String activityCode;
 
-  @Column(name = "day_of_week")
-  private String dayOfWeek;
+  @Column(name = "checkedin_by")
+  private String checkedinBy;
+
+  @Column(name = "logging_time")
+  private Date loggingTime;
 }

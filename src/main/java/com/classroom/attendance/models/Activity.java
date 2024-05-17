@@ -1,5 +1,6 @@
-package com.classroom.attendance.model;
+package com.classroom.attendance.models;
 
+import com.classroom.attendance.enums.Status;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,6 +8,8 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 @Entity
 @Data
@@ -15,8 +18,8 @@ import lombok.NoArgsConstructor;
 public class Activity {
     @Id
     @Schema(description = "Activity Code")
-    @Column(name = "code")
-    private String code;
+    @Column(name = "activity_code")
+    private String activityCode;
 
     @Schema(description = "Activity Description")
     @Column(name = "description")
@@ -35,10 +38,8 @@ public class Activity {
     private String adminId;
 
     //NOTE: A student will not check-in to an activity, it will check-in to a class
-    @Schema(description = "Student Id")
-    @Column(name = "studentId")
-    private String studentId;
 
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     @Column(name = "status")
-    private String status;
+    private Status status;
 }

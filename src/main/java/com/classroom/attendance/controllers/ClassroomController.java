@@ -1,7 +1,7 @@
-package com.classroom.attendance.controller;
+package com.classroom.attendance.controllers;
 
-import com.classroom.attendance.model.Activity;
-import com.classroom.attendance.service.ClassroomService;
+import com.classroom.attendance.models.Activity;
+import com.classroom.attendance.services.ClassroomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,13 +36,13 @@ public class ClassroomController {
 
   @GetMapping("/classroom/{reference}/checkin")
   @Operation(
-      summary = "Get classroom current activity",
+      summary = "Checkin for the class",
       description = "Endpoint to execute checkin for a student")
   @ApiResponse(responseCode = "200", description = "Activity found")
   @ApiResponse(responseCode = "404", description = "Activity Not Found")
   @ApiResponse(responseCode = "403", description = "Action is forbidden")
   @ApiResponse(responseCode = "500", description = "Internal Server Error")
-  public Activity checkinAttendance(
+  public Activity registerCheckin(
       @Parameter(description = "Classroom unique reference") @PathVariable String reference)
   {
     return new Activity();

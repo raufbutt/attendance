@@ -1,6 +1,6 @@
-package com.classroom.attendance.repository;
+package com.classroom.attendance.repositories;
 
-import com.classroom.attendance.model.Activity;
+import com.classroom.attendance.models.Activity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
