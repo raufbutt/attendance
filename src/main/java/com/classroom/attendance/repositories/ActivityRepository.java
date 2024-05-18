@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ActivityRepository extends JpaRepository<Activity, String> {
+  Activity findActivityByActivityCode(String code);
+
 
   Activity findActivityByClassroomReference(String reference);
 }

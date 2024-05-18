@@ -6,8 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,4 +30,11 @@ public class Timeslot {
 
   @Column(name = "day_of_week")
   private String dayOfWeek;
+
+  /*@ManyToOne
+  @JoinColumn(name = "room_Id")
+  private Classroom classroom;*/
+
+  @Schema(description = "Activity")
+  private String activityCode;
 }

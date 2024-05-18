@@ -1,12 +1,12 @@
 package com.classroom.attendance.services;
 
 import com.classroom.attendance.dto.ActivityResponse;
+import com.classroom.attendance.models.Timeslot;
 import com.classroom.attendance.repositories.ActivityRepository;
 import com.classroom.attendance.repositories.ClassroomRepository;
 import com.classroom.attendance.repositories.TimeslotRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+
 import java.util.Date;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -23,40 +23,37 @@ public class ClassroomService {
 
   private long THRESHOLD = 900000; //15 minutes in milliseconds
 
-  public ActivityResponse getActivity(String reference) throws Exception {
+  public ActivityResponse getActivity(String reference) {
     ObjectMapper mapper = new ObjectMapper();
     ActivityResponse response = null;
     //Check if a provided string a valid UUID?
     boolean isValid = validateUUID(reference);
     boolean isCurrent = false;
-    if(isValid) {
-      // Check the current time
-      Date currentDate = new Date();
-      LocalDateTime currentTime = LocalDateTime.now(ZoneOffset.UTC);
-      isCurrent = allowableDifference(currentDate.getTime(), reference);
+    if (isValid) {
+      // Get the current Activity code as per the current time
+      var activity = activityRepository.findActivityByActivityCode(getActivityCode(new Date(), reference));
+      response = mapper.convertValue(activity, ActivityResponse.class);
     }
-    if (isCurrent){
-         var activity = activityRepository.findActivityByClassroomReference(reference);
-         response = mapper.convertValue(activity, ActivityResponse.class);
-    }
-    else
-      throw new RuntimeException("No Activity Found. Try later.");
-
     return response;
   }
 
-  private boolean allowableDifference(long input, String reference) {
+  protected String getActivityCode(Date input, String reference) {
     boolean allow = false;
+    String currentActivityCode = "";
     // Get Current timeslot associated with the classroom
     var classroom = classroomRepository.findClassroomByReference(reference);
-    var timeslot = timeslotRepository.findById(classroom.getTimeslotId());
-    if (timeslot.isPresent()) {
-      // Evaluate if it falls within the current time?
-      long difference = input - timeslot.get().getFromTime().getTime();
-      if (Math.abs(difference) <= THRESHOLD)
-        allow = true;
-    }
-    return allow;
+    //var timeslot = timeslotRepository.findById(classroom.getTimeslotId());
+    var timeslots = classroom.getTimeslots();
+    for (Timeslot slot : timeslots){
+      //if (timeslot.isPresent()) {
+        // Evaluate if it falls within the current time?
+        long difference = input.getTime() - slot.getFromTime().getTime();
+        if (Math.abs(difference) <= THRESHOLD) {
+          allow = true;
+          currentActivityCode = slot.getActivityCode();
+        }
+      }
+    return currentActivityCode;
   }
 
   private boolean validateUUID(String input){

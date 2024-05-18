@@ -30,8 +30,6 @@ public class Classroom {
   private String location;
 
   @Schema(description = "Timeslot Id")
-  private Long timeslotId;
-
-  @Schema(description = "Activity")
-  private String activityCode;
+  @OneToMany(mappedBy = "timeslotId", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Timeslot> timeslots;
 }
