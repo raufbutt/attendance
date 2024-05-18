@@ -1,7 +1,7 @@
 # Attendance API
 
 ## Description
-To allow checkin for an available Activity for a given classroom and check-in for the activity
+To retrieve classroom details and allow checkin for an available Activity for a given classroom
 
 ## Getting Started
 

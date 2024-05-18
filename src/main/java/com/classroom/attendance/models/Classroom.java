@@ -23,6 +23,13 @@ public class Classroom {
   @Column(name = "name")
   private String name;
 
+  @Column(name = "description")
+  private String description;
+
+  @Schema(description = "Timeslot Id")
+  @Column(name = "timeslot_id")
+  private long timeslotId;
+
   @Column(name = "location")
   private String location;
 

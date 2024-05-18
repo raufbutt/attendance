@@ -6,7 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,14 +22,13 @@ public class Timeslot {
   @Id
   @Schema(description = "Timeslot Id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
   private Long id;
 
-  @Column(name = "from")
-  private Time from;
+  @Column(name = "from_time")
+  private Time fromTime;
 
-  @Column(name = "to")
-  private Time to;
+  @Column(name = "to_time")
+  private Time toTime;
 
   @Column(name = "day_of_week")
   private String dayOfWeek;

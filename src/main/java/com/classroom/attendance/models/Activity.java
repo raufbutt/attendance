@@ -29,10 +29,6 @@ public class Activity {
     @Column(name = "cr_reference")
     private String classroomReference;
 
-    @Schema(description = "Timeslot Id")
-    @Column(name = "timeslot_id")
-    private long timeslotId;
-
     @Schema(description = "Staff Id")
     @Column(name = "admin_id")
     private String adminId;
