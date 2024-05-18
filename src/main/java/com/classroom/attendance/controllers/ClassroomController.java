@@ -37,11 +37,7 @@ public class ClassroomController {
   @ApiResponse(responseCode = "500", description = "Internal Server Error")
   public ActivityResponse getActivity(
   @Parameter(description = "Classroom unique reference") @PathVariable String reference) {
-      var response = classroomService.getActivity(reference);
-      if (Objects.isNull(response)){
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "\"No Activity Found. Try later. (CODE 404)\n");
-      }
-      return response;
+      return classroomService.getActivity(reference);
   }
 
   @GetMapping("/classroom/{reference}/checkin")

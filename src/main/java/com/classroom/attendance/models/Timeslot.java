@@ -8,11 +8,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.util.Date;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Timeslot {
