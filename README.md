@@ -1,7 +1,7 @@
 # Attendance API
 
 ## Description
-To allow checking for an available Activity for a given classroom and check-in for the activity
+To allow checkin for an available Activity for a given classroom and check-in for the activity
 
 ## Getting Started
 
@@ -9,7 +9,6 @@ To allow checking for an available Activity for a given classroom and check-in f
 
 * Java 17
 * Gradle 8.5 or later
-*
 * PostgreSQL 13.5
 
 ## Running Locally
@@ -26,3 +25,7 @@ Which will:
 
 * Create a container for local Postgres database
 * Run Flyway scripts to import initial data
+
+## Swagger UI
+* Run the service
+* Type in browser: http://localhost:8080/swagger-ui/index.html
