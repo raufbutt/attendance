@@ -6,6 +6,6 @@ public interface ClassroomService {
 
   ActivityResponse getActivity(String reference);
 
-  ActivityResponse registerCheckin(String reference, String Student);
+  ActivityResponse registerCheckin(String reference);
 
   }

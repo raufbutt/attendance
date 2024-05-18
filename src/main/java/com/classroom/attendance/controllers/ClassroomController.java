@@ -44,14 +44,14 @@ public class ClassroomController {
   @Operation(
       summary = "Checkin for the classroom",
       description = "Endpoint to execute checkin for a student")
-  @ApiResponse(responseCode = "200", description = "Activity found")
+  @ApiResponse(responseCode = "201", description = "Checkin is registered")
   @ApiResponse(responseCode = "404", description = "Activity Not Found")
   @ApiResponse(responseCode = "403", description = "Action is forbidden")
   @ApiResponse(responseCode = "500", description = "Internal Server Error")
-  public Activity registerCheckin(
+  public ActivityResponse registerCheckin(
       @Parameter(description = "Classroom unique reference") @PathVariable String reference)
   {
-    return new Activity();
+    return classroomService.registerCheckin(reference);
   }
 
 }
