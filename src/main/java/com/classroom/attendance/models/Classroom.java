@@ -26,14 +26,12 @@ public class Classroom {
   @Column(name = "description")
   private String description;
 
-  @Schema(description = "Timeslot Id")
-  @Column(name = "timeslot_id")
-  private long timeslotId;
-
   @Column(name = "location")
   private String location;
 
-  @Schema(description = "List of activities")
-  @OneToMany(mappedBy = "activityCode", cascade = CascadeType.ALL, orphanRemoval = true)
-  List<Activity> activities;
+  @Schema(description = "Timeslot Id")
+  private Long timeslotId;
+
+  @Schema(description = "Activity")
+  private String activityCode;
 }
