@@ -62,7 +62,7 @@ INSERT INTO public.classroom (description, location, name, reference) VALUES (NU
 --
 
 INSERT INTO public.timeslot (from_time, timeslot_id, to_time, activity_code, classroom, day_of_week) VALUES ('2024-05-18 14:00:00', 1, '2024-05-18 15:00:00', 'ACT02', '01358835-8b8c-4ead-b93b-57f2f4494453', 'Monday');
-INSERT INTO public.timeslot (from_time, timeslot_id, to_time, activity_code, classroom, day_of_week) VALUES ('2024-05-18 08:00:00', 2, '2024-05-18 08:00:00', 'ACT01', '88a4b94f-569d-48df-95aa-9badf69cb6ef', 'Tuesday');
+INSERT INTO public.timeslot (from_time, timeslot_id, to_time, activity_code, classroom, day_of_week) VALUES ('2024-05-18 10:45:00', 2, '2024-05-18 13:00:00', 'ACT01', '88a4b94f-569d-48df-95aa-9badf69cb6ef', 'Tuesday');
 
 
 --
