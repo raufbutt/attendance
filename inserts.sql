@@ -21,8 +21,8 @@ SET row_security = off;
 -- Data for Name: activity; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.activity (activity_code, admin_id, cr_reference, description, status) VALUES ('ACT01', NULL, '88a4b94f-569d-48df-95aa-9badf69cb6ef', 'Activity 1', 'CURRENT');
-INSERT INTO public.activity (activity_code, admin_id, cr_reference, description, status) VALUES ('ACT02', NULL, '88a4b94f-569d-48df-95aa-9badf69cb6ef', 'Activity 2', 'CURRENT');
+INSERT INTO public.activity (activity_code, admin_id, cr_reference, description, status) VALUES ('ACT01', NULL, '88a4b94f-569d-48df-95aa-9badf69cb6ef', 'Activity 1', 'ACTIVE');
+INSERT INTO public.activity (activity_code, admin_id, cr_reference, description, status) VALUES ('ACT02', NULL, '01358835-8b8c-4ead-b93b-57f2f4494453', 'Activity 2', 'ACTIVE');
 
 
 --
@@ -35,8 +35,14 @@ INSERT INTO public.activity (activity_code, admin_id, cr_reference, description,
 -- Data for Name: classroom; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.classroom (timeslot_id, description, location, name, reference) VALUES (1, NULL, 'South-Floor1', 'CS101', '01358835-8b8c-4ead-b93b-57f2f4494453');
-INSERT INTO public.classroom (timeslot_id, description, location, name, reference) VALUES (2, NULL, 'East-GroundFloor', 'EE200', '88a4b94f-569d-48df-95aa-9badf69cb6ef');
+INSERT INTO public.classroom (description, location, name, reference) VALUES (NULL, 'South-Floor1', 'room101', '01358835-8b8c-4ead-b93b-57f2f4494453');
+INSERT INTO public.classroom (description, location, name, reference) VALUES (NULL, 'East-GroundFloor', 'room010', '88a4b94f-569d-48df-95aa-9badf69cb6ef');
+
+
+--
+-- Data for Name: flyway_schema_history; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
 
 
 --
@@ -55,8 +61,8 @@ INSERT INTO public.classroom (timeslot_id, description, location, name, referenc
 -- Data for Name: timeslot; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.timeslot (from_time, to_time, timeslot_id, day_of_week) VALUES ('09:00:00', '10:00:00', 1, 'Monday');
-INSERT INTO public.timeslot (from_time, to_time, timeslot_id, day_of_week) VALUES ('11:30:00', '12:30:00', 2, 'Tuesday');
+INSERT INTO public.timeslot (from_time, timeslot_id, to_time, activity_code, classroom, day_of_week) VALUES ('2024-05-18 14:00:00', 1, '2024-05-18 15:00:00', 'ACT02', '01358835-8b8c-4ead-b93b-57f2f4494453', 'Monday');
+INSERT INTO public.timeslot (from_time, timeslot_id, to_time, activity_code, classroom, day_of_week) VALUES ('2024-05-18 08:00:00', 2, '2024-05-18 08:00:00', 'ACT01', '88a4b94f-569d-48df-95aa-9badf69cb6ef', 'Tuesday');
 
 
 --
@@ -70,7 +76,7 @@ SELECT pg_catalog.setval('public.checkin_id_seq', 1, false);
 -- Name: timeslot_timeslot_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.timeslot_timeslot_id_seq', 2, true);
+SELECT pg_catalog.setval('public.timeslot_timeslot_id_seq', 1, false);
 
 
 --

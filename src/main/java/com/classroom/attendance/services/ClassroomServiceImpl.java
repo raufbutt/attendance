@@ -82,6 +82,10 @@ public class ClassroomServiceImpl implements ClassroomService{
     // from where the student Id can be obtained.
     String user = "Student_Id";
 
+    /* NOTE: To avoid forgery and to maintain security, we would implement solutions
+    // such as Authentication via Single SignOn, Custom Request Header, CSRF token
+    */
+
     //Fetch the available activity
     Activity response = getActivity(reference);
     //response.setStudent(user);

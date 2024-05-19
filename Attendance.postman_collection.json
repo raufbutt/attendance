@@ -18,7 +18,7 @@
 		{
 			"name": "Checkin",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"url": "http://localhost:8080/v1/api/classroom/88a4b94f-569d-48df-95aa-9badf69cb6ef/checkin"
 			},
