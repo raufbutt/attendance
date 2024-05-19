@@ -6,5 +6,5 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CheckinRepository extends JpaRepository<Checkin, Long> {
-  Optional<Checkin> findCheckinByActivityCodeAndCheckedinByAndLoggingTimeBetween(String code, String studentId, Date before, Date after);
+  Optional<Checkin> findCheckinByActivityCodeAndCheckedinByAndLogTimeIs(String code, String StudentId, Date today);
 }

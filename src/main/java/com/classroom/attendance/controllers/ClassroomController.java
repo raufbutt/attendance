@@ -3,6 +3,7 @@ package com.classroom.attendance.controllers;
 import com.classroom.attendance.dto.ActivityResponse;
 import com.classroom.attendance.models.Activity;
 import com.classroom.attendance.services.ClassroomService;
+import com.classroom.attendance.services.ClassroomServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,7 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
     description = "Endpoints to fetch current activities and check-in")
 public class ClassroomController {
 
-  private final ClassroomService classroomService;
+  private final ClassroomServiceImpl classroomService;
 
   @GetMapping("/classroom/{reference}")
   @Operation(
@@ -35,7 +36,7 @@ public class ClassroomController {
   @ApiResponse(responseCode = "404", description = "Activity Not Found")
   @ApiResponse(responseCode = "403", description = "Action is forbidden")
   @ApiResponse(responseCode = "500", description = "Internal Server Error")
-  public ActivityResponse getActivity(
+  public Activity getActivity(
   @Parameter(description = "Classroom unique reference") @PathVariable String reference) {
       return classroomService.getActivity(reference);
   }

@@ -29,7 +29,6 @@ public class Classroom {
   @Column(name = "location")
   private String location;
 
-  @Schema(description = "Timeslot Id")
-  @OneToMany(mappedBy = "timeslotId", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "classroom", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Timeslot> timeslots;
 }

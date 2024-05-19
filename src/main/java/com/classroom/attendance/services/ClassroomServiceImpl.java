@@ -4,12 +4,11 @@ import com.classroom.attendance.dto.ActivityResponse;
 import com.classroom.attendance.exceptions.BadRequestException;
 import com.classroom.attendance.exceptions.ResourceConflictException;
 import com.classroom.attendance.exceptions.ResourceNotFoundException;
+import com.classroom.attendance.models.Activity;
 import com.classroom.attendance.models.Checkin;
 import com.classroom.attendance.models.Timeslot;
 import com.classroom.attendance.repositories.ActivityRepository;
-import com.classroom.attendance.repositories.CheckinRepository;
 import com.classroom.attendance.repositories.ClassroomRepository;
-import com.classroom.attendance.repositories.TimeslotRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Date;
@@ -25,23 +24,23 @@ public class ClassroomServiceImpl implements ClassroomService{
 
   private final ActivityRepository activityRepository;
   private final ClassroomRepository classroomRepository;
-  private final CheckinRepository checkinRepository;
-  private final TimeslotRepository timeslotRepository;
+  private final CheckinService checkinService;
 
   private final ObjectMapper mapper = new ObjectMapper();
 
-  private final long THRESHOLD = 900000; //15 minutes in milliseconds
+  private final long THRESHOLD = 15; //15 minutes
 
-  public ActivityResponse getActivity(String reference) {
+  public Activity getActivity(String reference) {
     //Check if a provided string a valid UUID?
     if (isValidUUID(reference)) {
       // Get the current Activity code as per the current provided time
       String code = getActivityCode(new Date(), reference);
       var activity = activityRepository.findActivityByActivityCode(code)
           .orElseThrow(
-              () -> new ResourceNotFoundException(HttpStatus.NOT_FOUND, "\nNo Activity Found. Try later.")
+              () -> new ResourceNotFoundException(HttpStatus.NOT_FOUND, "\nNo Activity Found. Try later!")
           );
-      return mapper.convertValue(activity, ActivityResponse.class);
+      //return mapper.convertValue(activity, ActivityResponse.class);
+      return activity;
     }
       throw new BadRequestException(HttpStatus.BAD_REQUEST, "\nBad Request. Invalid Class reference.");
   }
@@ -57,7 +56,9 @@ public class ClassroomServiceImpl implements ClassroomService{
     var timeslots = classroom.getTimeslots();
     for (Timeslot slot : timeslots){
         // Evaluate if it falls within the current time?
-        long difference = input.getTime() - slot.getFromTime().getTime();
+        long slotMins = ((slot.getFromTime().getTime() % 86400000) / 3600000) * 60;
+        long currenMins = ((input.getTime() % 86400000) / 3600000) * 60;
+        long difference = slotMins - currenMins;
         if (Math.abs(difference) <= THRESHOLD) {
           currentActivityCode = slot.getActivityCode();
           break;
@@ -77,32 +78,31 @@ public class ClassroomServiceImpl implements ClassroomService{
 
   @Transactional()
   public ActivityResponse registerCheckin(String reference){
-    // ASSUMPTION: A student is authenticated and a security token would come in header
+    // ASSUMPTION: A student is authenticated and a security token would come in the header
     // from where the student Id can be obtained.
     String user = "Student_Id";
+
     //Fetch the available activity
-    ActivityResponse response = getActivity(reference);
-    response.setStudent(user);
+    Activity response = getActivity(reference);
+    //response.setStudent(user);
     Date currentDate = new Date();
 
     // Check for an existing check-in
-    //Using checkin service, get checkin for the current Activity and Student and loggingdate is today
-    var existingCheckin = checkinRepository.findCheckinByActivityCodeAndCheckedinByAndLoggingTimeBetween(
-        response.getActivityCode(), user, currentDate, currentDate);
-
-    if (existingCheckin.isPresent()){
-      throw new ResourceConflictException(HttpStatus.CONFLICT, "Already Checked in. Contact Support");
+    // Using checkin service, get checkin for the current Activity and Student and logTime is today's
+    if (checkinService.isAlreadyCheckedin(response.getActivityCode(), user, currentDate)){
+      throw new ResourceConflictException(HttpStatus.CONFLICT, "Already Checked in. Contact Support.");
     }
-    else {
-      //Prepare the checkin
-      Checkin obj = Checkin.builder()
+
+    //Prepare the checkin
+    Checkin attendance = Checkin.builder()
           .activityCode(response.getActivityCode())
+          .reference(reference)
           .checkedinBy(user)
-          .loggingTime(currentDate)
+          .logTime(currentDate)
           .build();
 
-      checkinRepository.saveAndFlush(obj);
-    }
-    return response;
+    checkinService.create(attendance);
+    //return response;
+    return new ActivityResponse();
   }
 }

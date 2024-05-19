@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,9 +34,9 @@ public class Timeslot {
   @Column(name = "day_of_week")
   private String dayOfWeek;
 
-  /*@ManyToOne
-  @JoinColumn(name = "room_Id")
-  private Classroom classroom;*/
+  //@ManyToOne
+  @JoinColumn(name = "classroom_ref")
+  private String classroom;
 
   @Schema(description = "Activity")
   private String activityCode;

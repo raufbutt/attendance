@@ -34,6 +34,6 @@ public class Checkin {
   @Column(name = "checkedin_by")
   private String checkedinBy;
 
-  @Column(name = "logging_time")
-  private Date loggingTime;
+  @Column(name = "log_time")
+  private Date logTime;
 }
