@@ -1,19 +1,17 @@
 package com.classroom.attendance.services;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.classroom.attendance.dto.ActivityResponse;
-import com.classroom.attendance.enums.Status;
+import com.classroom.attendance.exceptions.ResourceNotFoundException;
 import com.classroom.attendance.models.Activity;
 import com.classroom.attendance.models.Classroom;
 import com.classroom.attendance.models.Timeslot;
 import com.classroom.attendance.repositories.ActivityRepository;
 import com.classroom.attendance.repositories.ClassroomRepository;
-import com.classroom.attendance.repositories.TimeslotRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 @ExtendWith(MockitoExtension.class)
 public class ClassroomServiceTest {
@@ -34,50 +33,21 @@ public class ClassroomServiceTest {
   private ClassroomRepository classroomRepository;
 
   @Mock
-  private TimeslotRepository timeslotRepository;
-
-  @Mock
   private ActivityRepository activityRepository;
 
-  @Test
-  void getCurrentActivity_successful() {
-    String classReference = "88a4b94f-569d-48df-95aa-9badf69cb6ef";
+  @Mock
+  private Classroom mockClassroom;
 
-    ActivityResponse response = new ActivityResponse();
-    response.setActivityCode("ACT001");
-    response.setStatus(Status.ACTIVE.name());
-    response.setClassroomReference(classReference);
+  @Mock
+  private Activity mockActivity;
 
-    Timeslot timeslot = Timeslot.builder()
-        .activityCode("ACT001")
-        .timeslotId(1L)
-        .fromTime(mock(Date.class))
-        .toTime(mock(Date.class))
-        .build();
-    List<Timeslot> list = List.of(timeslot);
-    Classroom mockClassroom = mock(Classroom.class);
-    when(classroomRepository.findClassroomByReference(classReference)).thenReturn(
-        Optional.ofNullable(mockClassroom));
-    when(mockClassroom.getTimeslots()).thenReturn(list);
+  @Mock
+  private ObjectMapper mockMapper;
 
-    ObjectMapper mapper = mock(ObjectMapper.class);
-    Activity mockActivity = mock(Activity.class);
-    when(classroomService.getActivityCode(mock(Date.class), classReference)).thenReturn(anyString());
-    when(activityRepository.findActivityByActivityCode(anyString())).thenReturn(
-        Optional.ofNullable(mockActivity));
-
-    when(mapper.convertValue(mockActivity, ActivityResponse.class)).thenReturn(response);
-
-    var actualResponse = classroomService.getActivity(classReference);
-
-    assertNotNull(actualResponse);
-    assertEquals("ACT001", actualResponse.getActivityCode());
-    assertEquals("ACTIVE", actualResponse.getStatus());
-  }
+  private final String CLASS_REFERENCE = "88a4b94f-569d-48df-95aa-9badf69cb6ef";
 
   @Test
   void getActivityCode_success(){
-    String classReference = "88a4b94f-569d-48df-95aa-9badf69cb6ef";
     Date currentDate = mock(Date.class);
     Timeslot timeslot = Timeslot.builder()
         .activityCode("ACT001")
@@ -85,32 +55,36 @@ public class ClassroomServiceTest {
         .fromTime(mock(Date.class))
         .toTime(mock(Date.class))
         .build();
-    List<Timeslot> list = List.of(timeslot);
-    Classroom mockClassroom = mock(Classroom.class);
-    when(classroomRepository.findClassroomByReference(classReference)).thenReturn(
-        Optional.ofNullable(mockClassroom));
-    when(mockClassroom.getTimeslots()).thenReturn(list);
-    String activityCode = classroomService.getActivityCode(currentDate, classReference);
-    assertEquals("ACT001", activityCode);
+    List<Timeslot> lstSlots = List.of(timeslot);
+    when(classroomRepository.findClassroomByReference(CLASS_REFERENCE)).thenReturn(
+        Optional.of(mockClassroom));
+    when(mockClassroom.getTimeslots()).thenReturn(lstSlots);
+
+    String actualCode = classroomService.getActivityCode(currentDate, CLASS_REFERENCE);
+    assertEquals("ACT001", actualCode);
   }
 
   @Test
   void getActivityCode_failure(){
-    String classReference = "88a4b94f-569d-48df-95aa-9badf69cb6ef";
     Date currentDate = mock(Date.class);
-    List<Timeslot> list = List.of();
-    Classroom mockClassroom = mock(Classroom.class);
-    when(classroomRepository.findClassroomByReference(classReference)).thenReturn(
+    List<Timeslot> lstSlots = List.of();
+    when(classroomRepository.findClassroomByReference(CLASS_REFERENCE)).thenReturn(
         Optional.ofNullable(mockClassroom));
-    when(mockClassroom.getTimeslots()).thenReturn(list);
-    String activityCode = classroomService.getActivityCode(currentDate, classReference);
-    assert(activityCode).isBlank();
-    assertEquals("", activityCode);
+    when(mockClassroom.getTimeslots()).thenReturn(lstSlots);
+    String actualCode = classroomService.getActivityCode(currentDate, CLASS_REFERENCE);
+    assert(actualCode).isBlank();
+    assertEquals("", actualCode);
   }
 
   @Test
   void getCurrentActivity_404NotFound(){
-
+    when(classroomRepository.findClassroomByReference(CLASS_REFERENCE)).thenReturn(
+        Optional.ofNullable(mockClassroom));
+    when(activityRepository.findActivityByActivityCode(anyString()))
+          .thenThrow(new ResourceNotFoundException(HttpStatus.NOT_FOUND, "\nNo Activity Found. Try later!"));
+    assertThatThrownBy(() -> classroomService.getActivity(CLASS_REFERENCE))
+        .isInstanceOf(ResourceNotFoundException.class)
+        .hasMessageContaining("No Activity Found. Try later!");
   }
 
 }

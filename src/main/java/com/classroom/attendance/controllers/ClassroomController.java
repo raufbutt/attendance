@@ -1,14 +1,11 @@
 package com.classroom.attendance.controllers;
 
 import com.classroom.attendance.dto.ActivityResponse;
-import com.classroom.attendance.models.Activity;
 import com.classroom.attendance.services.ClassroomService;
-import com.classroom.attendance.services.ClassroomServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -36,10 +33,10 @@ public class ClassroomController {
       summary = "Get classroom current activity",
       description = "Endpoint to retrieve current activity for a given classroom")
   @ApiResponse(responseCode = "200", description = "Activity found")
-  @ApiResponse(responseCode = "404", description = "Activity Not Found")
+  @ApiResponse(responseCode = "404", description = "Data Not Found")
   @ApiResponse(responseCode = "403", description = "Action is forbidden")
   @ApiResponse(responseCode = "500", description = "Internal Server Error")
-  public Activity getActivity(
+  public ActivityResponse getActivity(
   @Parameter(description = "Classroom unique reference") @PathVariable String reference) {
       return classroomService.getActivity(reference);
   }
@@ -59,5 +56,4 @@ public class ClassroomController {
   {
     return classroomService.registerCheckin(reference);
   }
-
 }

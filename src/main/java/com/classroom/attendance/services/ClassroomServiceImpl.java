@@ -4,7 +4,6 @@ import com.classroom.attendance.dto.ActivityResponse;
 import com.classroom.attendance.exceptions.BadRequestException;
 import com.classroom.attendance.exceptions.ResourceConflictException;
 import com.classroom.attendance.exceptions.ResourceNotFoundException;
-import com.classroom.attendance.models.Activity;
 import com.classroom.attendance.models.Checkin;
 import com.classroom.attendance.models.Timeslot;
 import com.classroom.attendance.repositories.ActivityRepository;
@@ -30,7 +29,7 @@ public class ClassroomServiceImpl implements ClassroomService{
 
   private final long THRESHOLD = 15; //15 minutes
 
-  public Activity getActivity(String reference) {
+  public ActivityResponse getActivity(String reference) {
     //Check if a provided string a valid UUID?
     if (isValidUUID(reference)) {
       // Get the current Activity code as per the current provided time
@@ -39,13 +38,12 @@ public class ClassroomServiceImpl implements ClassroomService{
           .orElseThrow(
               () -> new ResourceNotFoundException(HttpStatus.NOT_FOUND, "\nNo Activity Found. Try later!")
           );
-      //return mapper.convertValue(activity, ActivityResponse.class);
-      return activity;
+      return mapper.convertValue(activity, ActivityResponse.class);
     }
       throw new BadRequestException(HttpStatus.BAD_REQUEST, "\nBad Request. Invalid Class reference.");
   }
 
-  protected String getActivityCode(Date input, String reference) {
+  public String getActivityCode(Date input, String reference) {
     String currentActivityCode = "";
     // Get Current timeslot associated with the classroom
     var classroom = classroomRepository.findClassroomByReference(reference)
@@ -54,6 +52,7 @@ public class ClassroomServiceImpl implements ClassroomService{
         ));
 
     var timeslots = classroom.getTimeslots();
+
     for (Timeslot slot : timeslots){
         // Evaluate if it falls within the current time?
         long slotMins = ((slot.getFromTime().getTime() % 86400000) / 3600000) * 60;
@@ -87,8 +86,8 @@ public class ClassroomServiceImpl implements ClassroomService{
     */
 
     //Fetch the available activity
-    Activity response = getActivity(reference);
-    //response.setStudent(user);
+    ActivityResponse response = getActivity(reference);
+    response.setStudent(user);
     Date currentDate = new Date();
 
     // Check for an existing check-in
@@ -106,7 +105,6 @@ public class ClassroomServiceImpl implements ClassroomService{
           .build();
 
     checkinService.create(attendance);
-    //return response;
-    return new ActivityResponse();
+    return response;
   }
 }
