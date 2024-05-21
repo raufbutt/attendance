@@ -28,6 +28,7 @@ public class ClassroomServiceImpl implements ClassroomService{
   private final ObjectMapper mapper = new ObjectMapper();
 
   private final long THRESHOLD = 15; //15 minutes
+  private final long THRESHOLD_MILLIS = 15*60*1000; //15 minutes
 
   public ActivityResponse getActivity(String reference) {
     //Check if a provided string a valid UUID?
@@ -55,9 +56,10 @@ public class ClassroomServiceImpl implements ClassroomService{
 
     for (Timeslot slot : timeslots){
         // Evaluate if it falls within the current time?
-        long slotMins = ((slot.getFromTime().getTime() % 86400000) / 3600000) * 60;
-        long currenMins = ((input.getTime() % 86400000) / 3600000) * 60;
+        long slotMins = ((slot.getFromTime().getTime() % 86400000) / 60000);
+        long currenMins = ((input.getTime() % 86400000) / 60000);
         long difference = slotMins - currenMins;
+
         if (Math.abs(difference) <= THRESHOLD) {
           currentActivityCode = slot.getActivityCode();
           break;
